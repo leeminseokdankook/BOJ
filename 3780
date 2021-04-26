@@ -1,0 +1,64 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int Make_union(int i, int j, vector<int>& par)
+{
+	par[i] = j;
+	return abs(i - j) % 1000;
+}
+
+int find(int x, vector<int>& par, vector<int>& distance);
+
+int main()
+{
+	int t;
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+	cin >> t;
+	while (t--)
+	{
+		vector<int> parent, distance;
+		int n;
+		cin >> n;
+		parent.resize(n + 1);
+		distance.resize(n + 1, 0);
+		for (int i = 1; i <= n; ++i)
+		{
+			parent[i] = i;
+		}
+		while (1)
+		{
+			char oper;
+			cin >> oper;
+			if (oper == 'E')
+			{
+				int vertex;
+				cin >> vertex;
+				find(vertex, parent, distance);
+				cout << distance[vertex] << "\n";
+			}
+			else if (oper == 'I')
+			{
+				int i, j;
+				cin >> i >> j;
+				distance[i] = Make_union(i, j, parent);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+}
+
+int find(int x, vector<int>& par, vector<int>& distance)
+{
+	if (x == par[x])return x;
+	int parent = find(par[x], par, distance);
+	distance[x] += distance[par[x]];
+	return par[x] = parent;
+}
